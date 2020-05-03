@@ -1,2 +1,86 @@
 # Size of Investment
 
+## China Foreign Investment By Region
+```{r byregion, warning=FALSE, message=FALSE}
+library(knitr)
+library(RColorBrewer)
+library(ggplot2)
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(plotly)
+investment <- read_csv("./data/investment.csv")
+investment <- investment %>%
+  filter(Year >=2005 && Year <= 2019)
+data2 <- investment %>%
+  group_by(Region) %>%
+  summarise(counts = n()) %>%
+  arrange(desc(Region)) %>%
+  mutate(prop = round(counts*100/sum(counts), 1),
+         lab.ypos = cumsum(prop) - 0.5*prop)
+
+##plot
+f2 <- ggplot(data2, aes(x = "", y = prop, fill = Region)) +
+  geom_bar(width = 1, stat = "identity", color = "white") +
+  geom_text(aes(y = lab.ypos, label = prop), color = "white")+
+  coord_polar("y", start = 0)+
+  ggpubr::fill_palette("jco")+
+  ggtitle("China Foreign Investment by Region")+
+  theme_void()
+f2
+```
+
+The graph compares China's investment to foreign countries by different target regions in terms of project numbers, between 2005 and 2014. We used the percentage to present the number of projects. The top three target regions or countries are Europe, East Asia, and the USA. However, if we combine the data from North America with the USA, then North America should be the second most popular target of Chinese investment. MENA region has the fewest number of projects.
+
+
+## Investment over World
+
+We further plot the countries on the world map, and have a detailed insight on the world distribution:
+
+```{r dataset,warning=FALSE, message=FALSE}
+library(tidyverse)
+investment <- read_csv("./data/investment.csv")
+investment <- investment %>%
+  filter(Year >=2005 && Year <= 2019)
+map_world <- map_data("world")
+
+##name adjustment
+investment <- investment %>%
+  mutate(country = recode(
+    Country, `Russian Federation` = "Russia", 
+    `Trinidad-Tobago` = "Trinidad", 
+    `Antigua and Barbuda` = "Antigua",
+    `Sao Tome` = "Sao Tome and Principe", 
+    `UAE` =  "United Arab Emirates"
+  ))
+fdi_inv <- investment%>%
+  group_by(country) %>%
+  summarize(project_num = n())
+fdi_inv <- left_join(map_world, fdi_inv, by = c("region" = "country"))
+
+##plot the data
+ggplot(fdi_inv, aes(x = long, y = lat, group = group)) +
+  theme(legend.position = c(0.08,0.28))+
+  geom_polygon(aes(fill = project_num))+
+  scale_fill_gradientn(
+    colours = c( "#2A8A8C","#404E88","#461863"), 
+    values = scales::rescale(c(10,50,100)), 
+    labels = scales::comma
+  ) +
+  guides(fill = guide_legend(reverse = T,keywidth = 1.5)) +
+  labs(# legend name
+    #fill = "num of projects", 
+    title = "Number of Chinese FDI projects", 
+    subtitle = "2005 to 2019", 
+    x = NULL,
+    y = NULL
+  )
+```
+
+During 2005 to 2014, we can find that Chinese outward Foreign Direct Investment mainly focuses in USA and Australia,following by Canada, Russia, Brazil, Germany, and India. 
+
+(Additionally, we find that Pakistan has the deepest color, which is not surprising. China-Pakistan relations has been historically amicable. Since the announcement of the Belt and Road Initiative in 2013, China has invested dearly in the China-Pakistan Economic Corridor, in which Pakistan is the sole destination of investment. ) 
+
+
+
+
