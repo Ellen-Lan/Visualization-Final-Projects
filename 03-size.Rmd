@@ -80,6 +80,54 @@ ggplot(fdi_inv, aes(x = long, y = lat, group = group)) +
 
 During 2005 to 2019, we can find that Chinese outward Foreign Direct Investment mainly focuses in USA and Australia,following by Canada, Russia, Brazil, Germany, and India. 
 
+## Network Vesion: Investment over World 
+
+
+```{r}
+# Data
+library(dplyr)
+library(maps)
+library(geosphere)
+library(dplyr)
+investment <- read_csv("./data/investment.csv")
+investment <- investment %>%
+  filter(Year >=2005 && Year <= 2019)
+geo <- read.csv(file = "./data/countrygeo.csv")
+
+investinfosum<-investment%>%group_by(Country)%>%summarize(quantity_sum=sum(Quantity_in_Millions))
+
+investgeo<-left_join(investinfosum,geo,by = c("Country" = "country"))
+
+####Plot
+plot_my_connection=function( dep_lon, dep_lat, arr_lon, arr_lat, ...){
+    inter <- gcIntermediate(c(dep_lon, dep_lat), c(arr_lon, arr_lat), n=50, addStartEnd=TRUE, breakAtDateLine=F)             
+    inter=data.frame(inter)
+    diff_of_lon=abs(dep_lon) + abs(arr_lon)
+    if(diff_of_lon > 180){
+        lines(subset(inter, lon>=0), lwd=1, col="Turquoise2")
+        lines(subset(inter, lon<0), lwd=1, col="Turquoise2")
+    }else{
+        lines(inter, lwd=1, col="Turquoise2")
+        }
+    }
+
+map("world", fill=F, col="lightblue", bg="grey1")
+china<-geo%>%filter(country=="China")
+
+for (i in (1:dim(investgeo)[1])) { 
+
+plot_my_connection(china$lon[1], china$lat[1], investgeo$lon[i], investgeo$lat[i])
+}
+
+points(investgeo$lon,investgeo$lat, pch=19,cex=investgeo$quantity_sum^0.5*0.007,col="salmon")
+```
+
+This map shows the network between China and invested countries. The larger the circle is the more total amount from 2005-2014  invested to that counry. We can easily tell that China invest more on big countries like USA, Russia, Canada and Austrailia. Obviously China invested more on developed countries than those less economically developed areas. Noticed that the density of south Africa is abnormaly high compared to its economic.Also, South America and North Africa are two areas that less covered by the invest map of China.
+```{r}
+investment
+
+```
+
 
 ## China Investment by Year <br/>
 Red-Investment, Steelblue-Construction.

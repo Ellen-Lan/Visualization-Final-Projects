@@ -123,6 +123,7 @@ ggplot(pyramid_terms, aes(x = reorder(terms, -Frequency),
   theme(plot.title = element_text(hjust = 0.5))
 
 ```
+
 Above is a pyramid plot comparison of the most important term stems between ODA projects and OOF projects. Please advise the Data Source section to check for the difference bewteen ODA and OOF projects. We filtered for the most commonly used 50 stems for ODA projects and OOF projects, and join them together. As we expected, there are obviously overlaps in the two top 50s. Like what we did to the first graph, we exclude four stems--"china", "project", "chines", "million"--that are generally applicable to all projects. 
 
 Here are the findings based on our analysis:   
