@@ -100,7 +100,7 @@ There are only a few transport and energy projects in North America.
 ## Network Analysis
 n this graph, the size of Country Name is decided by the investment stock with China. The larger the stock is, the bigger the name is.
 The color of the name varied by its largest CN FDI sector.
-```{r,warning=FALSE, message=FALSE}
+```{r net,warning=FALSE, message=FALSE}
 library(dplyr)
 library('igraph')
 info<-data.frame(country=investment$Country,quantity=investment$Quantity_in_Millions,sector=investment$Sector)
@@ -110,7 +110,7 @@ sector_info<-info %>% group_by(country) %>% summarize (sector =names(which.max(t
 quantity_info<-info%>%group_by(country)%>% summarize (quantity=sum(quantity))
 ```
 
-```{r}
+```{r net}
 link<-data.frame(from=rep('China',125),to=quantity_info$country,quantity=quantity_info$quantity)
 node<-data.frame(id=quantity_info$country,country=quantity_info$country,quantity=quantity_info$quantity,sector=sector_info$sector)
 china<-data.frame(id="China",country="China",quantity=100000,sector="Center")
