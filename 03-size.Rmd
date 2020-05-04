@@ -81,6 +81,45 @@ During 2005 to 2014, we can find that Chinese outward Foreign Direct Investment 
 
 (Additionally, we find that Pakistan has the deepest color, which is not surprising. China-Pakistan relations has been historically amicable. Since the announcement of the Belt and Road Initiative in 2013, China has invested dearly in the China-Pakistan Economic Corridor, in which Pakistan is the sole destination of investment. ) 
 
+## China Investment by Year <br/>
+Red-Investment, Steelblue-Construction.
+```{r}
+mydata3 = read.csv("./data/combine.csv")  #read csv file 
+#dim(mydata3)
 
+mydata3i <- filter(mydata3, mydata3$Type == "Investment")
+data3i <- mydata3i %>%
+  group_by(Year) %>%
+  summarise(counts = n()) 
+data3i$Year <- as.numeric(as.character(data3i$Year))
 
+mydata3c <- filter(mydata3, mydata3$Type == "Construction")
+data3c <- mydata3c %>%
+  group_by(Year) %>%
+  summarise(counts = n()) 
+data3c$Year <- as.numeric(as.character(data3c$Year))
+
+```
+```{r}
+xx <- ggplot() +
+  geom_line(data3i, mapping =aes(x = Year, y = counts), color = "darkred") +
+  geom_line(data3c, mapping =aes(x = Year, y = counts), color = "steelblue", linetype="twodash") +
+  ggtitle("Figure 3: The 14-Year Trend of China Investment and Construction") +
+    ylab("Number of projects") +
+  scale_x_continuous(breaks=c(2005:2019), labels=c(2005:2019)) +
+  # #scale_color_discrete(name = "FDI Type", labels = c("Investment", "Construction")) +
+  # scale_color_manual(values = c(
+  #   'Investment' = 'darkred',
+  #   'Construction' = 'steelblue'))
+  annotate("text", x = 2009, y = 37, label = "Investment") +
+  annotate("text", x = 2007, y = 75, label = "Construction")
+```
+```{r}
+library(plotly)
+ggplotly(xx)
+```
+
+The figure compares numbers of total Chinese foreign investments and construction projects  from 2005 to 2019. We find that the number of Chinese foreign investment has increased year-on-year before 2016 except for 2013. For construction projects, the number of projects has increased year-on-year before 2016 except for 2012. 
+
+The number of investment and construction projects have both peaked in 2016, which are 235 and 206 respectively. It has later experienced a continuous drop in 2017 and 2018. The big decrease in 2019 may due to the fact that the data in 2019 was not fully collected. 
 

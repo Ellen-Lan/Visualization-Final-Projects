@@ -5,5 +5,42 @@ CGIT follows Chinese global activities the way the Chinese government does. Chin
 
 The Geocoded Global Chinese Official Finance Dataset includes five datasets: one on China’s Official Development Assistance (ODA)-like projects, one on China’s Other Official Flows (OOF)-like projects, one on projects that are neither ODA-like nor OOF-like, one combining them all, and one with detailed project descriptions and sources for all projects. The reason projects are divided into ODA-like, OOF-like, or neither is that ODA and OOF are OECD countries definition. ODAs are traditionally referred as aids, whereas OOF are just investment. Since Chinese aids and investment do not use such a standard, researchers at AidData have to discern which are which by themselves so that the data could be comparable to western investment and aids.
 
-Since the two databases cover different period. We will choose their overlaps, which is from 2015 to 2014. Since both databases collected information from media. We expect there would be difference between them. We use both of them because they provide different key information about Chinese foreign investment. 
+Since the two databases cover different period. We will choose the latest one, which is from 2005 to 2019. And the text information are available from 2005 to 2014. Since both databases collected information from media. We expect there would be difference between them. We use both of them because they provide different key information about Chinese foreign investment. 
+
+## Presentation of Investment Data from 2005 to 2019
+```{r,warning=FALSE, message=FALSE}
+investment <- read_csv("./data/investment.csv")
+investment <- investment %>%
+  filter(Year >=2005 && Year <= 2019)
+
+datashow<- investment[1:100,c("Year","Quantity in Millions","Sector","Country","Transaction Party")]
+library(DT)
+pretty_headers <- c("Year","Investors","Quantity in Millions","Secotr","Country")
+datashow %>%
+  datatable(
+    rownames = FALSE,
+    colnames = pretty_headers,
+    filter = list(position = "top"),
+    options = list(language = list(sSearch = "Filter:"))
+  )
+```
+
+## Presentation of Text Data from 2005 to 2014
+```{r,warning=FALSE, message=FALSE}
+textdata <- read_csv("./data/GlobalChineseOfficialFinanceDataset_v1.0.csv")
+textdata <- textdata %>%
+  filter(year >=2005 && year <= 2019)
+
+textdatashow<- textdata[1:10,c("project_id","year","recipient_condensed","title","description")]
+
+library(DT)
+pretty_headers2 <- c("Project ID","Year","Recipient Country","title","Description")
+textdatashow %>%
+  datatable(
+    rownames = FALSE,
+    colnames = pretty_headers2,
+    filter = list(position = "top"),
+    options = list(language = list(sSearch = "Filter:"))
+  )
+```
 
