@@ -15,9 +15,9 @@ investment <- read_csv("./data/investment.csv")
 investment <- investment %>%
   filter(Year >=2005 && Year <= 2019)
 
-datashow<- investment[1:100,c("Year","Quantity in Millions","Sector","Country","Transaction Party")]
+datashow<- investment[1:100,c("Year","Quantity_in_Millions","Sector","Country","Transaction Party")]
 library(DT)
-pretty_headers <- c("Year","Investors","Quantity in Millions","Secotr","Country")
+pretty_headers <- c("Year","Investors","Quantity_in_Millions","Secotr","Country")
 datashow %>%
   datatable(
     rownames = FALSE,

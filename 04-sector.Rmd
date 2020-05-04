@@ -96,3 +96,7 @@ leaflet() %>%
 From the graph we can see that the distribution of energy projects is spreadly more widely than transportation projects. 
 In Europe and Southeast Asia, most countries have both energy and transportation projects. But in Africa, the differences are shown.
 There are only a few transport and energy projects in North America.
+
+
+
+
