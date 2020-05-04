@@ -97,6 +97,51 @@ From the graph we can see that the distribution of energy projects is spreadly m
 In Europe and Southeast Asia, most countries have both energy and transportation projects. But in Africa, the differences are shown.
 There are only a few transport and energy projects in North America.
 
+## Network Analysis
+n this graph, the size of Country Name is decided by the investment stock with China. The larger the stock is, the bigger the name is.
+The color of the name varied by its largest CN FDI sector.
+```{r,warning=FALSE, message=FALSE}
+library(dplyr)
+library('igraph')
+info<-data.frame(country=investment$Country,quantity=investment$Quantity_in_Millions,sector=investment$Sector)
+
+sector_info<-info %>% group_by(country) %>% summarize (sector =names(which.max(table(sector))))
+# number of countries:101
+quantity_info<-info%>%group_by(country)%>% summarize (quantity=sum(quantity))
+```
+
+```{r}
+link<-data.frame(from=rep('China',125),to=quantity_info$country,quantity=quantity_info$quantity)
+node<-data.frame(id=quantity_info$country,country=quantity_info$country,quantity=quantity_info$quantity,sector=sector_info$sector)
+china<-data.frame(id="China",country="China",quantity=100000,sector="Center")
+node<-rbind(node,china)
+index<-data.frame(index=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15),sector=c("Agriculture","Chemicals","Energy","Entertainment","Finance","Health","Logistics","Metals","Other","Real estate","Technology","Tourism","Transport","Utilities","Center"))
+node$sector<-as.character(node$sector)
+sector_index<-vector()
+for (i in 1:126)
+{
+  sector_index[i]=index[index$sector==node$sector[i],1]
+}
+node<-cbind(node,sector_index)
+```
+
+```{r}
+table(info$sector)
+```
+
+```{r}
+net <- graph_from_data_frame(d=link, vertices=node, directed=F)
+```
 
 
+```{r}
+colrs <- c("springgreen4", "tomato4", "black", "hotpink1", "gold","bisque", "lightblue1", "grey75", "purple4", "tan4", "turquoise", "orange", "navyblue","steelblue4","red")
+V(net)$label.color <- colrs[V(net)$sector_index]
+V(net)$size <- V(net)$quantity^0.5*0.1
+V(net)$label.cex <- V(net)$quantity^0.5*0.008
+plot(net,vertex.shape="none") 
+library(RColorBrewer)
+legend("topright", legend=c("Agriculture","Chemicals","Energy","Entertainment","Finance","Health","Logistics","Metals","Other","Real estate","Technology","Tourism","Transport","Utilities","Center"), col = colrs , bty = "n", pch=20 , pt.cex = 1, cex = 0.6, text.col=colrs , horiz = FALSE, inset = c(0.1, 0.1))
+```
 
+This plot shows us the amount of invest for each country and the most common invest sector for each country from China. We noticed that China invested more on big countries (from the perspective of GDP or population). And those investments in big countries are dominated by the energy sector, which is easy to understand, Energy accounted a great proportion of cost for any industry. Next comes the Real estate and Algriculture. We can conclude from the plot that the primary industry and secondary industry take the vast majority of Chinses foreign investment while the tertiary industry like entertainment or tourism just take a negligible proportion of the investment.

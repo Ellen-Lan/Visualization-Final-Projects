@@ -1,6 +1,6 @@
 # Size of Investment
 
-## China Foreign Investment By Region
+## China Foreign Investment by Region
 ```{r byregion, warning=FALSE, message=FALSE}
 library(knitr)
 library(RColorBrewer)
