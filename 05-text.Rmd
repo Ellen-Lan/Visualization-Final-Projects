@@ -1,6 +1,6 @@
 # Text Analysis
 
-## Word Cloud (Total Term Frequency)
+## Total Term Frequency
 ```{r warning=F, message=F}
 library(tidyverse)
 library(readxl)
@@ -70,7 +70,7 @@ As suggested above, we have several observations regarding the analysis:
 4. Ten of twelve months in a year are included above. The exceptions are February and December. This totally makes sense, as December is the end of year and most governments and companies are wrapping up their year instead of developing new projects, and February is usually when Chinese New Year is in and a long holiday takes place.  
 5. Relatively frequently, the projects are "road" building, "equipment" provision, "power" plants construction, and "agricultural" projects.  
 
-## Word Cloud (Term Frequency by Entry)
+## Term Frequency by Entry
 ```{r warning=F, message=F}
 set.seed(11111)
 wordcloud(China_tf_idf$term, China_tf_idf$tf, colors = purple_orange, max.words = 100) # both ODA/OOF, tf-idf, term frequency
@@ -84,7 +84,7 @@ Here are some of our analysis based on the graph:
 3. Chinese telecommunication "ZTE" is the only firm listed above, which corresponds to its active role in Chinese foreign projects.  
 4. Types of projects that are mostly frequent based on this text analysis were "medical" projects, "pipe[lines]", and automobiles ("cars").  
 
-## Pyramid Chart (ODA/OOF Projects Comparison)
+## ODA/OOF Projects Comparison
 ```{r warning=F, message=F, fig.height=4, fig.width=5}
 d_ODA <- d %>% filter(flow_class == "ODA-like")
 d_OOF <- d %>% filter(flow_class == "OOF-like")

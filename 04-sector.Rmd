@@ -22,11 +22,11 @@ ggplot(data1, aes(x = reorder(Sector,-counts), y = counts)) +
   theme(axis.text.x = element_text(angle = 45))
 ```  
 
-The graph compares China's foreign investment by different sectors in terms of project numbers, between 2005 and 2019. Based on the figure, the top four sectors are Energy, Metals, Real estate, and transport. And the least popular projects are from utilities, Chemicals, and logistics.
+The graph compares China's foreign investment by different sectors in terms of project numbers, between 2005 and 2019. Based on the figure, the top four sectors are energy, metals, real estate, and transport. And the least popular projects are from utilities, chemicals, and logistics.
 
 
 ## In Energy and Transportation
-Energy and Transportation are the most important sectors that should be looked into when we investigate China FDI. The first one is the largest sector in FDI, which is to explore the raw materials; the second one means the development of transport infrastructure. 
+Energy and Transportation are the most important sectors that should be looked into when we investigate Chinese FDI. The first one is the largest sector in FDI, which is to explore the raw materials; the second one means the development of transport infrastructure. 
 ```{r map2,warning=FALSE, message=FALSE}
 # Data
 library(dplyr)
