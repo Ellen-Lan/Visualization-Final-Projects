@@ -1,1 +1,98 @@
-# Missing values
+# Sector of Investment
+
+## China Foreign Investment by Sectors:
+```{r bysector, warning=FALSE, message=FALSE}
+investment <- read_csv("./data/investment.csv")
+investment <- investment %>%
+  filter(Year >=2005 && Year <= 2019)
+bysector <- group_by(investment, investment$Sector)
+
+#dim(investment)
+#investment[1:2, ]
+#f <- ggplot(na.omit(investment), aes(x=luse, y=rich))
+data1 <- bysector %>%
+  group_by(Sector) %>%
+  summarise(counts = n())
+ggplot(data1, aes(x = reorder(Sector,-counts), y = counts)) +
+  geom_bar(fill = 'steelblue', stat = "identity",width=0.7) +
+  geom_text(aes(label = counts), vjust = -0.3) +
+  ylab("Number of projects") +
+  xlab('Sectors') +
+  ggtitle("Figure 1: China Foreign Investment by Sectors") +
+  theme(axis.text.x = element_text(angle = 45))
+```  
+
+The graph compares China's foreign investment by different sectors in terms of project numbers, between 2005 and 2019. Based on the figure, the top four sectors are Energy, Metals, Real estate, and transport. And the least popular projects are from utilities, Chemicals, and logistics.
+
+
+## In Energy and Transportation
+Energy and Transportation are the most important sectors that should be looked into when we investigate China FDI. The first one is the largest sector in FDI, which is to explore the raw materials; the second one means the development of transport infrastructure. 
+```{r map2,warning=FALSE, message=FALSE}
+# Data
+library(dplyr)
+investment <- read_csv("./data/investment.csv")
+investment <- investment %>%
+  filter(Year >=2005 && Year <= 2019)
+geo <- read.csv(file = "./data/countrygeo.csv")
+investmentgeo<-left_join(investment,geo,by = c("Country" = "country"))
+
+energy <- investmentgeo %>%
+  filter(Sector=="Energy") 
+
+energy <- energy %>%
+  group_by(Country,lat,lon,Sector) %>%
+  summarize(project_num = n(),fdi_amount= sum(Quantity_in_Millions))
+
+trans <- investmentgeo %>%
+  filter(Sector =="Transport") 
+trans <- trans %>%
+  group_by(Country,lat,lon,Sector) %>%
+  summarize(project_num = n(),fdi_amount= sum(Quantity_in_Millions))
+
+```
+```{r map2.2,warning=FALSE, message=FALSE}
+library(leaflet)
+library(ggmap)
+ernergypop <- paste("Recipient Country:", energy$Country, "<br/>",
+                      "Projects Num:", energy$project_num, "<br/>",
+                      "FDI Amount:", round(energy$fdi_amount, 
+                                           digits = 0),"Million", "<br/>")
+
+transpop <- paste("Recipient Country:", trans$Country, "<br/>",
+                      "Projects Num:", trans$project_num, "<br/>",
+                      "FDI Amount:", round(trans$fdi_amount, 
+                                           digits = 0),"Million", "<br/>")
+
+EnergyIcon <- icons(
+  iconUrl = "./pic/energy_icon.png",
+  iconWidth = 12, iconHeight = 12,
+  iconAnchorX = 8, iconAnchorY = 8
+  )
+TransIcon <- icons(
+  iconUrl = "./pic/transportation.png",
+  iconWidth = 12, iconHeight = 12,
+  iconAnchorX = 8, iconAnchorY = 8
+  )
+
+leaflet() %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  #setView(lng = 115.7, lat = 39.4,zoom=100) %>%
+  addMarkers(data = energy, 
+             lng = energy$lon, lat = energy$lat,
+             icon = EnergyIcon,
+             popup = ernergypop,
+             group = "Energy") %>%
+  addMarkers(data = trans, 
+             lng = ~lon, lat = ~lat,
+             icon = TransIcon,
+             popup = transpop,
+             group = "Transport") %>%
+  
+  addControl("FDI Recipient Countries", position = "topright") %>%
+  addLayersControl(overlayGroups = c("Energy", "Transport"),
+                   options = layersControlOptions(collapsed = T))
+```
+
+From the graph we can see that the distribution of energy projects is spreadly more widely than transportation projects. 
+In Europe and Southeast Asia, most countries have both energy and transportation projects. But in Africa, the differences are shown.
+There are only a few transport and energy projects in North America.
