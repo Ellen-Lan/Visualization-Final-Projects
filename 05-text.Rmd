@@ -1,7 +1,7 @@
 # Text Analysis
 
 ## Total Term Frequency
-```{r warning=F, message=F}
+```{r tf1,warning=F, message=F}
 library(tidyverse)
 library(readxl)
 library(tidytext)
@@ -71,7 +71,7 @@ As suggested above, we have several observations regarding the analysis:
 5. Relatively frequently, the projects are "road" building, "equipment" provision, "power" plants construction, and "agricultural" projects.  
 
 ## Term Frequency by Entry
-```{r warning=F, message=F}
+```{r tf2, warning=F, message=F}
 set.seed(11111)
 wordcloud(China_tf_idf$term, China_tf_idf$tf, colors = purple_orange, max.words = 100) # both ODA/OOF, tf-idf, term frequency
 ```
