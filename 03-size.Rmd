@@ -123,3 +123,58 @@ The figure compares numbers of total Chinese foreign investments and constructio
 
 The number of investment and construction projects have both peaked in 2016, which are 235 and 206 respectively. It has later experienced a continuous drop in 2017 and 2018. The big decrease in 2019 may due to the fact that the data in 2019 was not fully collected. 
 
+
+## Top 10 FDI Countries Over Year
+```{r,warning=FALSE, message=FALSE}
+investinfo<-data.frame(year=investment$Year,investor=investment$Investor,quantity=investment$Quantity_in_Millions,sector=investment$Sector,country=investment$Country,greenfield=investment$Greenfield)
+```
+```{r}
+library(dplyr)
+df <- data.frame(matrix(ncol = 4, nrow = 0))
+x <- c("year", "country", "quantity_sum","order")
+colnames(df) <- x
+```
+```{r}
+for (i in 2005:2019)
+{
+  tmp<-investinfo%>%
+       filter(year==i)%>%
+       group_by(country)%>%
+       summarise(quantity_sum=sum(quantity))%>%
+       ungroup() %>% 
+       top_n(10, wt=quantity_sum)%>%
+       select(country, quantity_sum)%>%
+       arrange(desc(quantity_sum))%>%
+       slice(1:10) %>%
+       mutate(year=i,order = as.double(rev(seq(10:1))) * 1.0)
+       df <-df %>%bind_rows(tmp)
+}
+
+```
+
+```{r}
+library(ggplot2)
+library(gganimate)
+final_plot <- ggplot(df,aes(order, group = country,color='black')) +
+  geom_tile(aes(y = quantity_sum/2, 
+                height = quantity_sum,
+                width = 0.9), alpha = 0.9,color="black") +
+  geom_text(aes(y = 0, label = paste(country," ")), vjust = 0.2, hjust = 1,color="grey45") +
+  geom_text(aes(x=1,y=40000, label=paste0(year)), size=8, color = "steelblue4") +
+  coord_flip(clip = "off", expand = TRUE) +
+  scale_y_continuous(labels = scales::comma)+
+  theme(legend.position = "none",axis.ticks.y = element_blank(), 
+ axis.text.y = element_blank(),plot.margin = margin(1,1,1,5.5, "cm"))+
+  transition_states(year, 
+                    transition_length = 4, state_length = 3) +
+ labs(title = "Top FDI Countries Over Year", 
+ subtitle = "Top 10 Countries",
+ x="",y="Quantity, millions USD")
+  ease_aes('cubic-in-out')
+
+```
+
+
+```{r}
+final_plot
+```
