@@ -83,7 +83,7 @@ During 2005 to 2019, we can find that Chinese outward Foreign Direct Investment 
 ## Network Vesion: Investment over World 
 
 
-```{r InoverWorld}
+```{r IoW Network,warning=FALSE, message=FALSE}
 # Data
 library(dplyr)
 library(maps)
@@ -124,7 +124,7 @@ points(investgeo$lon,investgeo$lat, pch=19,cex=investgeo$quantity_sum^0.5*0.007,
 
 This map shows the network between China and invested countries. The larger the circle is the more total amount from 2005-2014  invested to that counry. We can easily tell that China invest more on big countries like USA, Russia, Canada and Austrailia. Obviously China invested more on developed countries than those less economically developed areas. Noticed that the density of south Africa is abnormaly high compared to its economic.Also, South America and North Africa are two areas that less covered by the invest map of China.
 ```{r}
-investment
+#investment
 
 ```
 
@@ -172,7 +172,7 @@ The figure compares numbers of total Chinese foreign investments and constructio
 The number of investment and construction projects have both peaked in 2016, which are 235 and 206 respectively. It has later experienced a continuous drop in 2017 and 2018. The big decrease in 2019 may due to the fact that the data in 2019 was not fully collected. 
 
 
-## Top 10 Investment Destinations Over Years
+## Top 10 Foreign Chinese Investment Destinations Over Years
 ```{r,warning=FALSE, message=FALSE}
 investinfo<-data.frame(year=investment$Year,investor=investment$Investor,quantity=investment$Quantity_in_Millions,sector=investment$Sector,country=investment$Country,greenfield=investment$Greenfield)
 ```
@@ -215,15 +215,15 @@ final_plot <- ggplot(df,aes(order, group = country,color='black')) +
  axis.text.y = element_blank(),plot.margin = margin(1,1,1,5.5, "cm"))+
   transition_states(year, 
                     transition_length = 4, state_length = 3) +
- labs(title = "Investment Destinations Over Years", 
+ labs(title = "Top Foreign Chinese Investment Destinations Over Year", 
  subtitle = "Top 10 Countries",
  x="",y="Quantity, millions USD")
-  ease_aes('cubic-in-out')
+ # ease_aes('cubic-in-out')
 
 ```
 
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 final_plot
 ```
-We have found that top destinations of Chinese foreign investment change quite regularly. However, countries like the United States, Russia, Germany, Australia,  Canada, Brazil, and Kazakhstan appeared more often than other countries. This shows that Chinese foreign investment projects can be categorized into two groups, with one being more technologically advanced investment, and the other being raw materials investment.
+We have found that top destinations of Chinese foreign investment change quite regularly. However, countries like the United States, Russia, Germany, Australia,  Canada, Brazil, and Kazakhstan appeared more often than other countries. This shows that Chinese foreign investment projects can be categorized into two groups, with one being more technologically advanced investment, and the other being raw materials investment.  

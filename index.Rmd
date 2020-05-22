@@ -1,5 +1,5 @@
 --- 
-title: "Group S: Chinese Foreign Direct Investment"
+title: "Group S: Chinese Foreign Investment"
 author: "Zijia He, Ranqing Lan, Wang Yao, Yuelin Lee"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
